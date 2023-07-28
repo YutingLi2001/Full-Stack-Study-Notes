@@ -5,3 +5,6 @@
 - `cat`
 	- Ex) `cat index.js`
 	- It reads data from the file and gives its content as output
+- `touch`
+	- Ex) `touch promisescript.js`
+	- It creates, changes and modify timestamps of a file.

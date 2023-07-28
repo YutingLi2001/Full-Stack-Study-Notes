@@ -1,2 +1,0 @@
-- CI - Continuous Integration
-- CD - Continuous Delivery 
