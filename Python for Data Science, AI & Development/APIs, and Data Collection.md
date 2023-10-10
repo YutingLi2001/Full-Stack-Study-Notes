@@ -383,3 +383,258 @@ for elem in root:
 
 print(data)
 ```
+
+
+### Flask Overview
+- **Definition**: Flask is a micro framework for creating web applications quickly with Python.
+- **Features**: Enables CRUD (Create, Read, Update, Delete) operations through Post, Put, Get, Update, and Delete requests.
+- **CRUD Details**:
+  - **Create**: Use Post and Put. Post creates data every request, while Put creates on first request then updates.
+  - **Read**: Use Get request to read data from the server.
+  - **Update**: Update requests to modify existing data.
+  - **Delete**: Delete requests to remove data.
+- **Installation**: Install Flask using `pip install Flask`.
+
+### Basic Structure of a Flask App
+1. **Install Flask**: `pip install Flask`.
+2. **Import Flask**: 
+   ```python
+   from flask import Flask
+   ```
+3. **Create Flask Object**:
+   ```python
+   app = Flask("My first Application")
+   ```
+4. **Define Route and Method**:
+   ```python
+   @app.route('/')
+   ```
+   Default request type is Get.
+5. **Define Method for Route**:
+   ```python
+   def hello():
+       return 'Hello World!'
+   ```
+6. **Run Application**:
+   ```python
+   if __name__ == '__main__':
+       app.run(debug=True)
+   ```
+7. **Access Application**: Open browser and connect to 127.0.0.1 at port 5000.
+
+### Templates in Flask
+- **Static**: Served as-is from `static` directory.
+- **Dynamic**: Pages filled dynamically for each request.
+- **Importing Flask, render_template, and request**:
+  ```python
+  from flask import Flask, render_template, request
+  ```
+
+### Example Flask App
+- **Static HTML Page**:
+  ```python
+  @app.route('/sample')
+  def getSampleHtml():
+      return render_template('sample.html')
+  ```
+- **Dynamic URL Parameter**:
+  ```python
+  @app.route('/user/<username>', methods=['GET'])
+  ```
+  Renders page with username from URL.
+- **Request Parameter**:
+  Renders page with username passed as a request.
+
+### Conclusion
+- Flask enables quick web application creation, supporting CRUD operations.
+- You can render both static and dynamic templates with Flask.
+- The application is accessible through IP and port, often 127.0.0.1:5000.
+
+
+### Decorators in Flask
+
+#### Objectives
+- Understand what are decorators
+- Understand the two kinds of decorators in a Python application
+- When and how to use decorators
+
+#### What are Decorators
+- Decorators help in annotating the methods and defining what a particular method is meant for. They're different from comments and are used by the interpreter while running the code.
+
+#### Method Decorators
+- Help reduce redundant code, for example, when output needs to be in a specific format like JSON for all methods.
+
+```python
+def jsonify_decorator(function):
+    def modifyOutput():
+        return {"output":function()}
+    return modifyOutput
+
+@jsonify_decorator
+def hello():
+    return 'hello world'
+
+@jsonify_decorator
+def add():
+    num1 = input("Enter a number - ")
+    num2 = input("Enter another number - ")
+    return int(num1)+int(num2)
+
+print(hello())
+print(add())
+```
+- This decorator (`jsonify_decorator`) modifies the output of the `hello()` and `add()` functions to return JSON formatted output.
+
+#### Route Decorators
+- Define endpoints for a Flask web application.
+- Assign URLs to functions in the application.
+
+```python
+@app.route("/")
+def home():
+    return "Hello World!"
+```
+- This decorator (`@app.route("/")`) assigns the `home()` function to the root URL ("/") of the application.
+
+- Multiple routes can be handled with a single function:
+
+```python
+@app.route("/")
+@app.route("/home")
+@app.route("/index")
+def home():
+    return "Hello World!"
+```
+- These decorators assign the `home()` function to three different URLs ("/", "/home", "/index").
+
+- Route decorators can also accept HTTP method types as a second parameter.
+- Route decorators can be more specific to handle cases like user details:
+
+```python
+@app.route("/userdetails/<userid>")
+def getUserDetails(userid):
+    return "User Details for  "+userid
+```
+- This decorator (`@app.route("/userdetails/<userid>")`) dynamically creates routes for each user's details based on the user id.
+
+### Conclusion
+- Decorators in Python, especially with Flask, can greatly help with code organization and efficiency. They are useful for both method and route handling.
+
+
+
+# CRUD Operations using Additional Features in Flask
+
+## Overview
+CRUD stands for Create, Read, Update, and Delete. They are fundamental operations in any application with a database. In this context, Flask is used to manage these operations using different HTTP methods like GET and POST.
+
+## Objectives
+- Use `flask.request.form` to access form data in POST requests
+- Redirect users using Flask's `redirect` function
+- Generate dynamic URLs with `url_for`
+- Handle various HTTP request types
+- Implement CRUD operations in a Flask app
+
+## Key Concepts
+
+### Accessing Form Data with `flask.request.form`
+
+This is how to access form data submitted via a POST request:
+
+```python
+from flask import request
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    # process login here
+```
+
+### Redirecting to a URL with `flask.redirect`
+
+Redirect users to different pages using the `redirect` function:
+
+```python
+from flask import redirect
+
+@app.route('/admin')
+def admin():
+    return redirect('/login')
+```
+
+### Generating Dynamic URLs with `flask.url_for`
+
+Dynamically generate URLs for a given endpoint with `url_for`:
+
+```python
+from flask import url_for
+
+@app.route('/admin')
+def admin():
+    return redirect(url_for('login'))
+
+@app.route('/login')
+def login():
+    return "<Login Page>"
+```
+
+### Handling Different HTTP Request Types
+
+Define routes that handle different types of HTTP requests:
+
+```python
+@app.route('/data', methods=['GET', 'POST'])
+def data():
+    if request.method == 'POST':
+        # process POST request
+    if request.method == 'GET':
+        # process GET request
+```
+
+### CRUD Operations in Flask
+
+- **Create Operation**: Data creation involves presenting a form to the user. In Flask, this data is accessed using `flask.request.form`.
+
+- **Read Operation**: Reading data involves accessing the data and presenting it to the user. You can pass specific IDs as an argument to the function to access specific entries.
+
+- **Update Operation**: Updating data involves accessing specific entries (like the Read operation) and giving new data (like the Create operation). 
+
+- **Delete Operation**: Deleting data involves removing a record based on its ID. The operation requires the ID to be passed as an argument to the function. 
+
+These operations are implemented in the following way:
+
+```python
+# Create
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    if request.method == 'POST':
+        # Access form data
+        name = request.form['name']
+        # Create a new record with the name
+        record = create_new_record(name)
+        return redirect(url_for('read', id=record.id))
+    return render_template('create.html')
+
+# Read
+@app.route('/read/<int:id>', methods=['GET'])
+def read(id):
+    record = get_record(id)
+    return render_template('read.html', record=record)
+
+# Update
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+def update(id):
+    if request.method == 'POST':
+        name = request.form['name']
+        update_record(id, name)
+        return redirect(url_for('read', id=id))
+    record = get_record(id)
+    return render_template('update.html', record=record)
+
+# Delete
+@app.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
+    delete_record(id)
+    return redirect(url_for('home'))
+```
+
