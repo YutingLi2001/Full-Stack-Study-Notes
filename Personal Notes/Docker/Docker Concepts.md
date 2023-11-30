@@ -1,0 +1,7 @@
+- Steps used to create and run containers
+	- Create a Dockerfile
+	- Use Dockerfile to create a container image
+	- Use the container image to create a running container.
+- What applications are a good fit for Docker?
+	- Applications that require flexible scaling and portability
+- 
